@@ -1,3 +1,26 @@
+
+#! Paper: 
+# Critical States in Reinforcement Learning: A Survey and New Perspectives
+
+#! Institute:
+# AImotion Bavaria, Technische Hochschule Ingolstadt (THI), Esplanade 10, 85049, Ingolstadt, Germany
+
+# The project uses three different Reinforcement Learning algorithms.
+
+#! Code and usage:
+# The DQN code is adpated from the official Pytorch tutorial for CartPole (URL: https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html)
+
+# The PPO code is adapted from MinimalRL GitHub repository (URL: https://github.com/seungeunrho/minimalRL/blob/master/ppo.py). MinialRL uses an MIT license.
+
+# The SAC code is adapated from the following GitHub repository (URL: https://github.com/tsmatz/reinforcement-learning-tutorials/blob/master/06-sac.ipynb
+# ) by Mr. Tsuyoshi Matsuzaki. There is no license mentioned for this repository. An attempt has been made to contact the author Mr. Tsuyoshi Matsuzaki via LinkedIn on 04.07.2024, 14:15.
+#! Response: No response yet as of 04.07.2024
+
+#! Declaration:
+# The usage of this code is performed in good faith for academic research purposes only.
+
+
+
 # Imports:
 # --------
 import os
@@ -31,9 +54,9 @@ FLATLAND_N_OBSERVATIONS = 2
 ##! ----
 # User definitions:
 # -----------------
-DQN_TRAIN = True
-DQN_GENERATE_HEATMAPS = True
-DQN_EXP_NUM = "4f_200_b"
+DQN_TRAIN = False
+DQN_GENERATE_HEATMAPS = False
+DQN_EXP_NUM = "paper1_results"
 DQN_RESULTS_PATH = "./results/DQN"
 DQN_ENV_RANDOM_RESET = False
 DQN_SAVING_FREQ = 100
@@ -44,10 +67,6 @@ DQN_TRAIN_PER_REPLAY_MEM = 5
 DQN_BATCH_SIZE = 128
 DQN_GAMMA = 0.99
 
-# DQN_EPS_START = 0.9
-# DQN_EPS_END = 0.01
-# DQN_EPS_DECAY = 800
-
 DQN_EPS_START = 0.9
 DQN_EPS_END = 0.01
 DQN_EPS_DECAY = 300
@@ -55,7 +74,7 @@ DQN_EPS_DECAY = 300
 DQN_TARGET_UPDATE_RATE = 0.005
 DQN_LEARNING_RATE = 1e-3
 DQN_REPLAY_MEM_MAX_SIZE = 50_000
-DQN_NO_EPISODES = 1_000
+DQN_NO_EPISODES = 2_000
 DQN_MAX_STEPS_PER_EPISODE = 5_000
 
 
@@ -69,8 +88,8 @@ DQN_MAX_STEPS_PER_EPISODE = 5_000
 # User definitions:
 # -----------------
 SAC_TRAIN = False
-SAC_GENERATE_HEATMAPS = False
-SAC_EXP_NUM = "8"
+SAC_GENERATE_HEATMAPS = True
+SAC_EXP_NUM = "paper1_results"
 SAC_SAVE_FREQ = 100
 SAC_RESULTS_PATH = "./results/SAC"
 SAC_ENV_RANDOM_RESET = True
@@ -94,6 +113,8 @@ if __name__ == "__main__":
         os.mkdir("./results")
 
 
+    #! DQN:
+    #! ----
     # Set seed value for repeatability:
     # ---------------------------------
     seed_no = 200
@@ -102,15 +123,15 @@ if __name__ == "__main__":
     random.seed(seed_no)
     np.random.seed(seed_no)
 
+    if not os.path.isdir(DQN_RESULTS_PATH):
+        os.mkdir(DQN_RESULTS_PATH)
+
+    saving_path = os.path.join(DQN_RESULTS_PATH,
+                                f"DQN_{DQN_EXP_NUM}")
+
     # Train a DQN:
     # ------------
     if DQN_TRAIN:
-        if not os.path.isdir(DQN_RESULTS_PATH):
-            os.mkdir(DQN_RESULTS_PATH)
-
-        saving_path = os.path.join(DQN_RESULTS_PATH,
-                                   f"DQN_{DQN_EXP_NUM}")
-
         train_dqn(device=DEVICE,
                   render=RENDER,
                   saving_path=saving_path,
@@ -141,23 +162,25 @@ if __name__ == "__main__":
                               "results", "DQN", f"DQN_{DQN_EXP_NUM}", "heatmaps"),
                           device=DEVICE)
     
+    #! SAC:
+    #! ----
+    # Set seed value for repeatability:
+    # ---------------------------------
+    seed_no = 100
+
+    torch.manual_seed(seed_no)
+    random.seed(seed_no)
+    np.random.seed(seed_no)
+
+    if not os.path.isdir(SAC_RESULTS_PATH):
+        os.mkdir(SAC_RESULTS_PATH)
+
+    saving_path = os.path.join(SAC_RESULTS_PATH, 
+                                f"SAC_{SAC_EXP_NUM}")
+    
     # Train SAC:
     # ----------
     if SAC_TRAIN:
-        # Set seed value for repeatability:
-        # ---------------------------------
-        seed_no = 100
-
-        torch.manual_seed(seed_no)
-        random.seed(seed_no)
-        np.random.seed(seed_no)
-
-        if not os.path.isdir(SAC_RESULTS_PATH):
-            os.mkdir(SAC_RESULTS_PATH)
-
-        saving_path = os.path.join(SAC_RESULTS_PATH, 
-                                   f"SAC_{SAC_EXP_NUM}")
-
         train_sac(no_episodes=SAC_NO_EPISODES,
                   max_buffer_size=SAC_MAX_BUFFER_SIZE,
                   max_steps=SAC_MAX_STEPS,
@@ -173,6 +196,8 @@ if __name__ == "__main__":
                   device=DEVICE,
                   save_path=saving_path)
 
+    # Generate SAC heatmaps:
+    # ----------------------
     if SAC_GENERATE_HEATMAPS:
         heatmap_evolution_sac(device=DEVICE, 
                               model_path=os.path.join(saving_path, "models"), 

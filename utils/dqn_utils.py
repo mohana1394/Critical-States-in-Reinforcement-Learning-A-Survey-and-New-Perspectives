@@ -104,13 +104,7 @@ def optimize_model(policy_net,
                    gamma,
                    train_per_replay_mem,
                    device):
-    """
-    Function does one step of Policy Network updates when called.
-
-    Modified from Pytorch's official implemetation of DQN for CartPole-v1
-    URL: https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
-    """
-
+    
     Transition = namedtuple('Transition',
                             ('state', 'action', 'next_state', 'reward', 'done'))
 

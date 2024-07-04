@@ -360,6 +360,7 @@ def train_sac(no_episodes,
                              q_target_model2=q_target_model2,
                              device=device)
 
+                
                 update_target(tau=tau,
                               q_origin_model1=q_origin_model1,
                               q_origin_model2=q_origin_model2,
@@ -559,6 +560,8 @@ def heatmap_evolution_sac(device,
 
             for mini_batch in range(0, data_points.shape[0], batch_size):
                 mini_policy = policynet(data_points[mini_batch:mini_batch+batch_size])
+                mini_policy = F.softmax(mini_policy, dim=-1)
+
                 mini_q1_values = qnet1(data_points[mini_batch:mini_batch+batch_size])
                 mini_q2_values = qnet2(data_points[mini_batch:mini_batch+batch_size])
                 

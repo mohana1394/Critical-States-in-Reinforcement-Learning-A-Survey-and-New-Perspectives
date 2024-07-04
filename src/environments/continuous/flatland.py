@@ -82,7 +82,7 @@ class ContinuousFlatLand(gym.Env):
                                   device=self.device, 
                                   dtype=torch.float32)
         
-        return self.state.unsqueeze(0)
+        return self.state
 
     # NOTE: We use random reset for PPO and SAC  
     def random_reset(self):
@@ -100,7 +100,7 @@ class ContinuousFlatLand(gym.Env):
                                   device=self.device, 
                                   dtype=torch.float32)
 
-        return self.state.unsqueeze(0)
+        return self.state
 
     def render(self, refresh_freq=0.01):
         self.axis.clear()
@@ -123,31 +123,3 @@ class ContinuousFlatLand(gym.Env):
 
     def close(self):
         plt.close()
-
-
-# Test environment:
-# -----------------
-if __name__ == "__main__":
-    # Usage
-    env = ContinuousFlatLand(device='cuda')  # Change to 'cuda' for GPU
-    # env.add_obstacle([4.5, 0, 5.5, 3.5])  # Define obstacle
-    # env.add_obstacle([4.5, 6.5, 5.5, 10])
-
-    env.add_subgoal([4.5, 3.5, 5.5, 6.5])
-
-    state = env.reset()
-    for _ in range(100_000):
-        action = torch.tensor(env.action_space.sample(),
-                              device=env.device)  # Random action
-        state, reward, done, info = env.step(action)
-
-        print(
-            f"State: {state}, Action: {action}, Reward: {reward}, Done: {done}, Info: {info}")
-
-        # env.render(refresh_freq=0.01)
-        if done:
-            break
-
-    plt.savefig("Continuous_Flat_Land.png")
-
-    env.close()

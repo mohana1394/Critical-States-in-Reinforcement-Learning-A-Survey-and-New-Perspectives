@@ -217,6 +217,7 @@ def plot_curves(saving_path,
 # Function 6: Main DQN training function
 # ----------
 def train_dqn(device,
+              render,
               saving_path,
               train_per_replay_mem,
               saving_freq,
@@ -233,7 +234,8 @@ def train_dqn(device,
               eps_end,
               eps_decay,
               env_random_reset,
-              action_step_size=0.5):
+              action_step_size=0.5,
+              env_gap_size=0.15):
     """
     Function is the main function to call to train the DQN in continuous grid environment 
     """
@@ -274,8 +276,8 @@ def train_dqn(device,
     # -------
     env = ContinuousFlatLand(device=device)
     # Define obstacles
-    env.add_obstacle([5-action_step_size, 0, 5+action_step_size, 5-0.5])
-    env.add_obstacle([5-action_step_size, 5+0.5, 5+action_step_size, 10])
+    env.add_obstacle([5-action_step_size, 0, 5+action_step_size, 5-env_gap_size])
+    env.add_obstacle([5-action_step_size, 5+env_gap_size, 5+action_step_size, 10])
 
     # Step 5: Define discrete to continuous action mapping
     # ------
@@ -288,7 +290,7 @@ def train_dqn(device,
     # -------
     # NOTE: In case of DQN, +1 and -1 rewards worked
     reward_mapping = {-1: torch.tensor([-1], device=device),
-                      +10: torch.tensor([+1], device=device),
+                      +10: torch.tensor([+10], device=device),
                       0: torch.tensor([0], device=device)}
 
     # Step 7: Done mapping
@@ -307,8 +309,10 @@ def train_dqn(device,
         # Choose between random reset and fixed reset:
         if not env_random_reset:
             state = env.fixed_reset()
+            state = state.unsqueeze(0)
         else:
             state = env.random_reset()
+            state = state.unsqueeze(0)
 
         # Normalize states
         # ----------------
@@ -326,7 +330,8 @@ def train_dqn(device,
                 disc_to_cont_action[action.item()])
 
             # NOTE: Choose if you want to render or not
-            # env.render()
+            if render:
+                env.render()
 
             # Normalize observation
             observation = tuple(each_item/10.0 for each_item in observation)
@@ -516,7 +521,7 @@ def generate_heatmap(data_points,
 
 # Function 11: Evolution of heatmaps
 # ------------
-def heatmap_evolution(device,
+def heatmap_evolution_dqn(device,
                       model_path,
                       saving_path,
                       batch_size: int = 128,

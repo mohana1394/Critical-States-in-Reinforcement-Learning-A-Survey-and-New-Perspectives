@@ -6,6 +6,7 @@ import glob
 import torch
 import numpy as np
 from ppo import PPO
+import scienceplots
 import matplotlib.pyplot as plt
 
 
@@ -83,6 +84,7 @@ def plot_heatmap(data_points,
 
     for name, each_metric in c.items():
         # criticality = each_metric(q_values)
+        plt.style.use(['science', 'ieee'])
 
         if clip_colourbar:
             # NOTE: You can keep the colourbar the same by clipping values
@@ -102,7 +104,9 @@ def plot_heatmap(data_points,
                         cmap="hot_r")
 
         plt.colorbar()
-        plt.savefig(os.path.join(saving_path, f"{name}_{index}.png"))
+        plt.savefig(os.path.join(saving_path, f"{name}_{index}.png"), 
+                    dpi=300, 
+                    bbox_inches='tight')
         plt.close()
 
 def run_criticality_evolution(model_directory, heatmaps_path, device='cpu'):

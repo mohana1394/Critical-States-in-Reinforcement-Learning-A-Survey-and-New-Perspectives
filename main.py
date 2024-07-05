@@ -1,6 +1,5 @@
-
-#! Paper: 
-# Critical States in Reinforcement Learning: A Survey and New Perspectives
+## Paper: 
+## Critical States in Reinforcement Learning: A Survey and New Perspectives
 
 #! Institute:
 # AImotion Bavaria, Technische Hochschule Ingolstadt (THI), Esplanade 10, 85049, Ingolstadt, Germany
@@ -8,17 +7,16 @@
 # The project uses three different Reinforcement Learning algorithms.
 
 #! Code and usage:
-# The DQN code is adpated from the official Pytorch tutorial for CartPole (URL: https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html)
+# The DQN code is adpated from the official publicly available DQN Pytorch tutorial for CartPole (URL: https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html)
 
 # The PPO code is adapted from MinimalRL GitHub repository (URL: https://github.com/seungeunrho/minimalRL/blob/master/ppo.py). MinialRL uses an MIT license.
 
 # The SAC code is adapated from the following GitHub repository (URL: https://github.com/tsmatz/reinforcement-learning-tutorials/blob/master/06-sac.ipynb
 # ) by Mr. Tsuyoshi Matsuzaki. There is no license mentioned for this repository. An attempt has been made to contact the author Mr. Tsuyoshi Matsuzaki via LinkedIn on 04.07.2024, 14:15.
-#! Response: No response yet as of 04.07.2024
+#! Response: Permission recevied by the author on LinkedIn on 04.07.2024, 21:38
 
 #! Declaration:
 # The usage of this code is performed in good faith for academic research purposes only.
-
 
 
 # Imports:
@@ -204,3 +202,8 @@ if __name__ == "__main__":
                               saving_path=saving_path, 
                               batch_size=SAC_BATCH_SIZE, 
                               freq=SAC_SAVE_FREQ)  
+        
+
+    #! PPO:
+    #! ----
+    # TODO: Add PPO code here and call the main() function
